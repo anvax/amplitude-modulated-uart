@@ -61,31 +61,29 @@ uint8_t x=0,checkForUARTInterrupt=0;
 volatile uint32_t *DWT_CONTROL = (uint32_t *)0xE0001000;
 volatile uint32_t *DWT_CYCCNT = (uint32_t *)0xE0001004;
 volatile uint32_t *DEMCR = (uint32_t *)0xE000EDFC;
-uint32_t Mcounter, count;
+uint32_t mCounter, count;
 
 
 void TIM1_Callback(void){
-
-	LL_TIM_ClearFlag_UPDATE(TIM1);
-	while(!LL_GPIO_IsInputPinSet(GPIOA, LL_GPIO_PIN_2)){
-		LL_GPIO_TogglePin(GPIOA, LL_GPIO_PIN_10);
-	}
-
-	LL_GPIO_SetOutputPin(GPIOA, LL_GPIO_PIN_10);
+  LL_TIM_ClearFlag_UPDATE(TIM1);
+  while(!LL_GPIO_IsInputPinSet(GPIOA, LL_GPIO_PIN_2)){
+    LL_GPIO_TogglePin(GPIOA, LL_GPIO_PIN_10);
+  }
+  LL_GPIO_SetOutputPin(GPIOA, LL_GPIO_PIN_10);
 }
 void  USART2_TX_Callback(void){
-	LL_USART_ClearFlag_TC(USART2);
-	Mcounter=*DWT_CYCCNT;
-	float op_time=-1;
-	do {
-		count=*DWT_CYCCNT-Mcounter;
-	  	x++;
-	  	if(x>255){
-	  		x=0;
-	  	}
-	  	op_time=count/168000000.0f;// count/F_CPU
-	} while (op_time<1);
-	LL_USART_TransmitData8(USART2, x);
+  LL_USART_ClearFlag_TC(USART2);
+  mCounter=*DWT_CYCCNT;
+  float op_time=-1;
+  do {
+    count=*DWT_CYCCNT-mCounter;
+    x++;
+    if(x>255){
+      x=0;
+    }
+    op_time=count/168000000.0f;// count/F_CPU
+  } while (op_time<1);
+  LL_USART_TransmitData8(USART2, x);
 }
 
 /* USER CODE END 0 */
@@ -98,12 +96,12 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 
-	 // enable the use DWT
-	*DEMCR = *DEMCR | 0x01000000;
-	// Reset cycle counter
-	*DWT_CYCCNT = 0;
-	// enable cycle counter
-	*DWT_CONTROL = *DWT_CONTROL | 1 ;
+   // enable the use DWT
+  *DEMCR = *DEMCR | 0x01000000;
+  // Reset cycle counter
+  *DWT_CYCCNT = 0;
+  // enable cycle counter
+  *DWT_CONTROL = *DWT_CONTROL | 1 ;
 
   /* USER CODE END 1 */
 
@@ -143,7 +141,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  LL_USART_TransmitData8(USART2, x);
+  LL_USART_TransmitData8(USART2, x);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
