@@ -52,6 +52,7 @@ extern volatile uint16_t rx_buffer_tail;
 
 void  USART2_TX_Callback(void);
 void TIM1_Callback(void);
+void TIM8_Callback(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -213,26 +214,16 @@ void TIM1_UP_TIM10_IRQHandler(void)
   /* USER CODE END TIM1_UP_TIM10_IRQn 0 */
 
   /* USER CODE BEGIN TIM1_UP_TIM10_IRQn 1 */
-	if(LL_TIM_IsActiveFlag_UPDATE(TIM1) && LL_TIM_IsEnabledIT_UPDATE(TIM1))
-		  {
-		    TIM1_Callback();
-		  }
+	//if(LL_TIM_IsActiveFlag_UPDATE(TIM1) && LL_TIM_IsEnabledIT_UPDATE(TIM1)){
+	//  TIM1_Callback();
+	//}
+
+	if(LL_TIM_IsActiveFlag_UPDATE(TIM1)){
+		TIM1_Callback();
+	  }
 
 
   /* USER CODE END TIM1_UP_TIM10_IRQn 1 */
-}
-
-/**
-  * @brief This function handles TIM1 capture compare interrupt.
-  */
-void TIM1_CC_IRQHandler(void)
-{
-  /* USER CODE BEGIN TIM1_CC_IRQn 0 */
-
-  /* USER CODE END TIM1_CC_IRQn 0 */
-  /* USER CODE BEGIN TIM1_CC_IRQn 1 */
-
-  /* USER CODE END TIM1_CC_IRQn 1 */
 }
 
 /**
@@ -241,13 +232,12 @@ void TIM1_CC_IRQHandler(void)
 void USART2_IRQHandler(void)
 {
   /* USER CODE BEGIN USART2_IRQn 0 */
-	 if(LL_USART_IsActiveFlag_TC(USART2) && LL_USART_IsEnabledIT_TXE(USART2))
-	  {
-	    USART2_TX_Callback();
-	  }
+
   /* USER CODE END USART2_IRQn 0 */
   /* USER CODE BEGIN USART2_IRQn 1 */
-
+	if(LL_USART_IsActiveFlag_TC(USART2)){
+		    USART2_TX_Callback();
+		  }
   /* USER CODE END USART2_IRQn 1 */
 }
 
