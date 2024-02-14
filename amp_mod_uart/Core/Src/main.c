@@ -145,11 +145,11 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  x++;
-	  if(x>255){
-	    x=0;
-	  }
-	  LL_USART_TransmitData8(USART2, x);
+    x++;
+	if(x>255){
+	  x=0;
+	}
+	LL_USART_TransmitData8(USART2, x);
 
     /* USER CODE END WHILE */
 
