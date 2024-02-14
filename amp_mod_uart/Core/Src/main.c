@@ -146,10 +146,10 @@ int main(void)
   while (1)
   {
     x++;
-	if(x>255){
-	  x=0;
-	}
-	LL_USART_TransmitData8(USART2, x);
+    if(x>255){
+      x=0;
+    }
+    LL_USART_TransmitData8(USART2, x);
 
     /* USER CODE END WHILE */
 
