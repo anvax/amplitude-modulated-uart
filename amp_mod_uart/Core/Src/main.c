@@ -55,21 +55,19 @@ static void MX_TIM1_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-uint8_t x=0;
 
 
-volatile uint32_t *DWT_CONTROL = (uint32_t *)0xE0001000;
-volatile uint32_t *DWT_CYCCNT = (uint32_t *)0xE0001004;
-volatile uint32_t *DEMCR = (uint32_t *)0xE000EDFC;
-uint32_t mCounter, count;
+int32_t TIM_PERIOD_CNT_100=24;
+int32_t TIM_PERIOD_CNT_50=11;
+int32_t checkUSART=0;
 
 
 
 void TIM1_Callback(void){
   if(LL_GPIO_IsInputPinSet(GPIOA, LL_GPIO_PIN_2)){
-    TIM1->CCR3=24;
+    TIM1->CCR3=TIM_PERIOD_CNT_100;
   }else{
-	TIM1->CCR3=11;
+	TIM1->CCR3=TIM_PERIOD_CNT_50;
   }
   if(LL_TIM_IsActiveFlag_UPDATE(TIM1)){
     LL_TIM_ClearFlag_UPDATE(TIM1);
@@ -77,12 +75,7 @@ void TIM1_Callback(void){
 }
 void  USART2_TX_Callback(void){
   LL_USART_ClearFlag_TC(USART2);
-  mCounter=*DWT_CYCCNT;
-  float op_time=-1;
-  do {
-    count=*DWT_CYCCNT-mCounter;
-    op_time=count/168000000.0f;// count/F_CPU
-  } while (op_time<1);
+  checkUSART=1;
 }
 
 
@@ -95,14 +88,7 @@ void  USART2_TX_Callback(void){
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
-  // enable the use DWT
-  *DEMCR = *DEMCR | 0x01000000;
-  // Reset cycle counter
-  *DWT_CYCCNT = 0;
-  // enable cycle counter
-  *DWT_CONTROL = *DWT_CONTROL | 1 ;
-
+	uint8_t x=0;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -145,10 +131,11 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    x++;
-    if(x>255){
-      x=0;
-    }
+	if(checkUSART){
+	  checkUSART=0;
+	  x++;
+	  LL_mDelay(1000);
+	}
     LL_USART_TransmitData8(USART2, x);
 
     /* USER CODE END WHILE */

@@ -53,6 +53,7 @@ extern volatile uint16_t rx_buffer_tail;
 void  USART2_TX_Callback(void);
 void TIM1_Callback(void);
 void TIM8_Callback(void);
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
